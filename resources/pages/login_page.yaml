@@ -1,0 +1,19 @@
+#id
+#xpath
+#link text
+#partial link
+#text
+#name
+#tag name
+#class name
+#css selector
+
+name:
+  by: "xpath"
+  locator: "//form/div[label='邮箱/手机号码']/div/input"
+password:
+  by: "xpath"
+  locator: "//form/div[label='登录密码']/div/input"
+login_btn:
+  by: "xpath"
+  locator: "//form/button"

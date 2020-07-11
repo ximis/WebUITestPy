@@ -1,0 +1,4 @@
+/venv/
+allure-result
+.pytest_cache
+
