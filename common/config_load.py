@@ -8,7 +8,7 @@ _env = None
 def init(env="k8s"):
     global _config
     global _env
-    _config = yaml.load(open("../resources/config/env_config.yaml"))
+    _config = yaml.load(open("../resources/config/env_config.yaml"), Loader=yaml.FullLoader)
     _env = _config.get(env)
 
 

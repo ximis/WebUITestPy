@@ -6,19 +6,22 @@ from common import config_load
 
 
 class BasePage:
-    def __init__(self, driver=None):
+    driver = None
+
+    def __init__(self):
         self.driver: Chrome = None
         self.wait: WebDriverWait = None
-        if driver is None:
+        if BasePage.driver is None:
             self._start_driver()
         else:
-            self.driver = driver
+            self.driver = BasePage.driver
 
         self._init_wait()
         self._init_page()
 
     def _start_driver(self):
         self.driver = Chrome(executable_path='../resources/drivers/chromedriver')
+        BasePage.driver = self.driver
         self.driver.implicitly_wait(10)
 
     def _init_page(self):
@@ -59,3 +62,7 @@ class BasePage:
 
     def get_tag_name(self, by, locator):
         return self.find_element(by, locator).tag_name
+
+    def quit(self):
+        self.driver.quit()
+        BasePage.driver = None

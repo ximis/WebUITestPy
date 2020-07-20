@@ -1,2 +1,5 @@
 #this file is config env
-k8s: https://www.baidu.com
+k8s:
+  url: https://www.baidu.com
+  username: xxx
+  password: xxx

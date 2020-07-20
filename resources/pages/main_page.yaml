@@ -11,6 +11,6 @@
 login:
   by: "link text"
   locator: "登录"
-password2:
-  by: "link text"
-  locator: "aaa"
+assets:
+  by: "xpath"
+  locator: '//div[contains(@class, "navUserItem")][div="资产"]'
