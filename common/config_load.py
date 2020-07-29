@@ -3,6 +3,7 @@ import yaml
 _config = {}
 _pages = {}
 _env = None
+_options = {}
 
 
 def init(env="k8s"):
@@ -25,3 +26,12 @@ def get_page(page):
             print(e)
             return None
     return _pages[page]
+
+
+def set_options(key, value):
+    global _options
+    _options[key] = value
+
+
+def get_options():
+    return _options

@@ -1,4 +1,5 @@
 from selenium.webdriver import Chrome
+from selenium.webdriver import ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 
@@ -20,7 +21,10 @@ class BasePage:
         self._init_page()
 
     def _start_driver(self):
-        self.driver = Chrome(executable_path='../resources/drivers/chromedriver')
+        options = ChromeOptions()
+        if config_load.get_options().get("headless"):
+            options.add_argument('--headless')
+        self.driver = Chrome(executable_path='../resources/drivers/chromedriver', options= options)
         BasePage.driver = self.driver
         self.driver.implicitly_wait(10)
 
