@@ -9,6 +9,7 @@ from common import config_load
 
 import sys
 
+
 class BasePage:
     driver = None
 
@@ -144,3 +145,6 @@ class BasePage:
 
     def get_attribute(self, by, locator, name):
         return self.find_element(by, locator).get_attribute(name)
+
+    def get_url(self):
+        return self.driver.current_url
