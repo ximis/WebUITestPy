@@ -26,6 +26,7 @@ class BasePage:
 
     def _start_driver(self):
         options = ChromeOptions()
+        options.page_load_strategy = "none"
         if config_load.get_options().get("headless"):
             options.add_argument("--window-size=1280,940")
             options.add_argument("--start-maximized")

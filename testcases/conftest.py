@@ -4,7 +4,7 @@ import pytest
 import time
 from datetime import datetime
 import allure
-
+import os
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -62,3 +62,4 @@ def take_screenshot(driver, nodeid):
     file_name = f'{nodeid}_{datetime.today().strftime("%Y-%m-%d_%H:%M")}.png'.replace("/", "_").replace("::", "__")
     driver.save_screenshot(file_name)
     allure.attach.file(file_name, attachment_type=allure.attachment_type.PNG)
+    os.remove(file_name)
