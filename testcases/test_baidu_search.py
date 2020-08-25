@@ -5,6 +5,11 @@ from pages import baidu_search_page
 
 @allure.feature("搜索")
 class TestBaiduSearch:
+    # @classmethod
+    # def setup_class(cls):
+    #     page = baidu_search_page.BaiduSearchPage()
+    #     page.search("selenium")
+    #     assert "seleniumsdfasfdaf" in page.get_url()
 
     @pytest.fixture(scope="class")
     def page(self):

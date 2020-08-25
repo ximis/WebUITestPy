@@ -48,6 +48,8 @@ def test_failed_check(request):
     # "function" scope
     if request.node.rep_setup.failed:
         print("setting up a test failed!", request.node.nodeid)
+        driver = request.node.funcargs['page'].driver
+        take_screenshot(driver, request.node.nodeid)
     elif request.node.rep_setup.passed:
         if request.node.rep_call.failed:
             # find a way to get driver
