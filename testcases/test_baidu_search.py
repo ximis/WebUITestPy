@@ -14,11 +14,13 @@ class TestBaiduSearch:
     @pytest.fixture(scope="class")
     def page(self):
         page = baidu_search_page.BaiduSearchPage()
+        assert 0
         yield page
         page.quit()
 
     @allure.story("search and check url")
     def test_search(self, page):
+        print("search...")
         page.search("selenium")
         assert "selenium" in page.get_url()
 

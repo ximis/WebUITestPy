@@ -6,6 +6,7 @@ from datetime import datetime
 import allure
 import os
 
+
 def pytest_addoption(parser):
     parser.addoption(
         "--env",
@@ -31,22 +32,28 @@ def init(request):
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     # execute all other hooks to obtain the report object
+    print("hook before ...")
     outcome = yield
+    print("hook end...")
     rep = outcome.get_result()
 
     # set a report attribute for each phase of a call, which can
     # be "setup", "call", "teardown"
 
     setattr(item, "rep_" + rep.when, rep)
+    if rep.when == 'setup' and rep.failed is True:
+        take_screenshot(MainPage.driver, rep.nodeid)
 
 
 # check if a test has failed
 @pytest.fixture(scope="function", autouse=True)
 def test_failed_check(request):
+    print("function before...")
     yield
+    print("function teardown....")
     # request.node is an "item" because we use the default
     # "function" scope
-    if request.node.rep_setup.failed:
+    if request.node.rep_setup.failed or (request.node.rep_setup.passed and request.node.rep_call.failed):
         print("setting up a test failed!", request.node.nodeid)
         driver = request.node.funcargs['page'].driver
         take_screenshot(driver, request.node.nodeid)

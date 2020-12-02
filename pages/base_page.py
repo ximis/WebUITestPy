@@ -1,13 +1,17 @@
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 from common import config_load
 
 import sys
+
+RETRY_COUNT = 3
 
 
 class BasePage:
@@ -62,22 +66,37 @@ class BasePage:
         raise ValueError("can't find element")
 
     def _init_wait(self):
-        self.wait = WebDriverWait(self.driver, 15)
+        ignored_exceptions = (NoSuchElementException, StaleElementReferenceException,)
+        self.wait = WebDriverWait(self.driver, 15, ignored_exceptions=ignored_exceptions)
 
     def find_element(self, by, locator):
         self.wait.until(expected_conditions.visibility_of_element_located((by, locator)))
         return self.driver.find_element(by, locator)
 
+    # def click(self, by, locator):
+    #     self.wait.until(expected_conditions.element_to_be_clickable((by, locator)))
+    #     self.driver.find_element(by, locator).click()
+
     def click(self, by, locator):
-        self.wait.until(expected_conditions.element_to_be_clickable((by, locator)))
-        self.driver.find_element(by, locator).click()
+        count = 1
+        while count <= RETRY_COUNT:
+            try:
+                self.wait.until(expected_conditions.element_to_be_clickable((by, locator)))
+                self.driver.find_element(by, locator).click()
+                break
+            except Exception as e:
+                count += 1
+                if count > RETRY_COUNT:
+                    raise e
+
+    def find_elements(self, by, locator):
+        self.wait.until(expected_conditions.visibility_of_element_located((by, locator)))
+        return self.driver.find_elements(by, locator)
 
     def send_keys(self, by, locator, data):
         self.wait.until(expected_conditions.element_to_be_clickable((by, locator)))
-        self.driver.find_element(by, locator).send_keys(data)
-
-    def send_keys1(self, by, locator, data):
-        # self.wait.until(expected_conditions.element_to_be_clickable((by, locator)))
+        # self.driver.find_element(by, locator).clear()  # 在发送之前，清理。 在个在某些情况下并不能很好的工作，采用下面这种方式
+        self.driver.find_element(by, locator).send_keys(Keys.CONTROL, 'a')  #工作正常
         self.driver.find_element(by, locator).send_keys(data)
 
     def get_property(self, by, locator, name):
@@ -124,7 +143,12 @@ class BasePage:
             return flag
 
     def page_back(self):
+        url = self.driver.current_url
         self.driver.back()
+        self.wait.until_not(expected_conditions.url_to_be(url))
+        self.wait.until(expected_conditions.presence_of_all_elements_located(("xpath", "html")))
+        # self.wait.until(expected_conditions.visibility_of_all_elements_located(("xpath", "html")))
+        self.driver.get(self.driver.current_url)
 
     def change_window(self):
         time.sleep(1)
