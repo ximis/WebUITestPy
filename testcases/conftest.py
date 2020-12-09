@@ -67,8 +67,17 @@ def test_failed_check(request):
 
 # make a screenshot with a name of the test, date and time
 def take_screenshot(driver, nodeid):
+    # 处理Driver初始化失败的情况
+    if driver is None:
+        return
     time.sleep(1)
     file_name = f'{nodeid}_{datetime.today().strftime("%Y-%m-%d_%H:%M")}.png'.replace("/", "_").replace("::", "__")
-    driver.save_screenshot(file_name)
-    allure.attach.file(file_name, attachment_type=allure.attachment_type.PNG)
-    os.remove(file_name)
+    # 处理driver截图异常
+    try:
+        driver.save_screenshot(file_name)
+        allure.attach(driver.current_url)
+        allure.attach.file(file_name, attachment_type=allure.attachment_type.PNG)
+        os.remove(file_name)
+    except Exception as e:
+        print(e)
+        pass
