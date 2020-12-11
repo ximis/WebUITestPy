@@ -85,6 +85,7 @@ class BasePage:
                 self.driver.find_element(by, locator).click()
                 break
             except Exception as e:
+                time.sleep(3)
                 count += 1
                 if count > RETRY_COUNT:
                     raise e
