@@ -1,5 +1,5 @@
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
-from selenium.webdriver import Chrome
+from selenium.webdriver import Chrome,ActionChains
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
@@ -89,6 +89,10 @@ class BasePage:
                 count += 1
                 if count > RETRY_COUNT:
                     raise e
+
+    def move_to_elements(self, by, locator):
+        self.wait.until(expected_conditions.visibility_of_element_located((by, locator)))
+        ActionChains(self.driver).move_to_element(self.driver.find_element(by, locator)).perform()
 
     def find_elements(self, by, locator):
         self.wait.until(expected_conditions.visibility_of_element_located((by, locator)))
