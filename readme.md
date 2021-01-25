@@ -1,4 +1,7 @@
-运行
+###简介
+使用python搭建的webUI自动化框架。
+
+## 运行
 cd testcases
 #调度时使用
 pytest -s -v 
